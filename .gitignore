@@ -27,6 +27,10 @@ tarea1/Data_3/
 *.o
 *.tar.gz
 
+*.mat
+*.h5
+*.pickle
+
 #not ignored
 #*.npy
 #*.png
