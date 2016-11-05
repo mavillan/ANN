@@ -28,7 +28,7 @@ tarea1/Data_3/
 *.tar.gz
 
 *.mat
-*.h5
+#*.h5
 *.pickle
 
 #not ignored
