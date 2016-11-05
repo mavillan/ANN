@@ -70,5 +70,6 @@ def train_deep_ae(X_train, X_val, layer_sizes=[1000, 500, 250, 2], activation='r
 
 if __name__=='__main__':
 	layer_sizes = map(int, sys.argv[1].strip().split('-'))
+	print(layer_sizes)
 	train_deep_ae(X_train, X_val, layer_sizes=layer_sizes)
 
