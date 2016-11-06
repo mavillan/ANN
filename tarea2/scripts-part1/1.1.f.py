@@ -67,7 +67,7 @@ def train_deep_ae(X_train, X_val, layer_sizes=[1000, 500, 250, 2], activation='r
     autoencoder.fit(X_train, X_train, nb_epoch=50, batch_size=25, shuffle=True, validation_data=(X_val, X_val))
     # saving results
     save_keras_model(encoder, 'enc_{0}L_{1}d'.format(len(layer_sizes), layer_sizes[-1]))
-    save_keras_model(autoencoder. 'ae_{0}L_{1}d'.format(len(layer_sizes), layer_sizes[-1]))
+    save_keras_model(autoencoder, 'ae_{0}L_{1}d'.format(len(layer_sizes), layer_sizes[-1]))
     return autoencoder
 
 if __name__=='__main__':
