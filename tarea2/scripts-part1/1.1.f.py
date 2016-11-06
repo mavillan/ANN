@@ -52,11 +52,11 @@ def train_deep_ae(X_train, X_val, layer_sizes=[1000, 500, 250, 2], activation='r
     layers_list = []
     layers_list.append( Input(shape=(784,)) )
     # encoding model
-    for size in layer_sizes[:-1]:
+    for size in layer_sizes:
         layers_list.append( Dense(size, activation=activation)(layers_list[-1]) )
     encoded = layers_list[-1]
     # decoding model
-    for size in layer_sizes[-1::-1]:
+    for size in layer_sizes[-2::-1]:
         layers_list.append( Dense(size, activation=activation)(layers_list[-1]) )
     layers_list.append( Dense(784, activation='sigmoid')(layers_list[-1]) )
     # encoder and autoencoder model
