@@ -1,8 +1,10 @@
 import sys
+sys.path.insert(0, '../')
+from keras_helper import *
+
 import pickle
 import time
 import numpy as np
-import matplotlib.pyplot as plt
 
 from keras.datasets import mnist
 from keras.utils import np_utils
@@ -62,14 +64,13 @@ def train_deep_ae(X_train, X_val, layer_sizes=[1000, 500, 250, 2], activation='r
     autoencoder = Model(input=layers_list[0], output=layers_list[-1])
     # training step
     autoencoder.compile(optimizer=SGD(lr=1.0), loss='binary_crossentropy')
-    autoencoder.fit(X_train, X_train, nb_epoch=50, batch_size=25, shuffle=True, validation_data=(X_val, X_val))
+    autoencoder.fit(X_train, X_train, nb_epoch=2, batch_size=25, shuffle=True, validation_data=(X_val, X_val))
     # saving results
-    encoder.save('enc_{0}L_{1}d.h5'.format(len(layer_sizes), layer_sizes[-1]))
-    autoencoder.save('ae_{0}L_{1}d.h5'.format(len(layer_sizes), layer_sizes[-1]))
+    save_keras_model(encoder, 'enc_{0}L_{1}d'.format(len(layer_sizes), layer_sizes[-1]))
+    save_keras_model(autoencoder. 'ae_{0}L_{1}d'.format(len(layer_sizes), layer_sizes[-1]))
     return autoencoder
 
 if __name__=='__main__':
-	layer_sizes = map(int, sys.argv[1].strip().split('-'))
-	print(layer_sizes)
-	train_deep_ae(X_train, X_val, layer_sizes=layer_sizes)
+    layer_sizes = list(map(int, sys.argv[1].strip().split('-')))
+    train_deep_ae(X_train, X_val, layer_sizes=layer_sizes)
 

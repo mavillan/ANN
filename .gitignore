@@ -1,6 +1,7 @@
 .ipynb_checkpoints
 tarea1/data/
 tarea1/Data_3/
+tarea2/__pycache__/
 
 *.ps
 *.aux
@@ -30,6 +31,7 @@ tarea1/Data_3/
 *.mat
 #*.h5
 *.pickle
+#*.json
 
 #not ignored
 #*.npy
