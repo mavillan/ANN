@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, '../')
+sys.path.insert(0, '/user/m/marvill/ANN/')
 from keras_helper import *
 
 import pickle
