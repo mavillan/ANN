@@ -109,6 +109,7 @@ if __name__=='__main__':
     model.compile(optimizer=optimizer_, loss='binary_crossentropy', metrics=['accuracy'])
     # saving net before fine tunning
     save_keras_model(model, 'mlp_768x1000x1000x10_pretrain_dae')
-    model.fit(X_train, y_train, nb_epoch=20, batch_size=25, shuffle=True, validation_data=(X_val, y_val))
+    hist = model.fit(X_train, y_train, nb_epoch=20, batch_size=25, shuffle=True, validation_data=(X_val, y_val))
     # saving net after fine tunning
+    pickle.dump( hist.history, open( "mlp_768x1000x1000x10_finetunning_dae.hist", "wb" ) )
     save_keras_model(model, 'mlp_768x1000x1000x10_finetunning_dae')

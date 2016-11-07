@@ -60,6 +60,7 @@ if __name__=='__main__':
     model.add(Dense(n_hidden_layer2, activation=activation_layer2))
     model.add(Dense(10, activation='softmax'))
     model.compile(optimizer=SGD(lr=1.0), loss='binary_crossentropy', metrics=['accuracy'])
-    model.fit(X_train, y_train, nb_epoch=50, batch_size=25, shuffle=True, validation_data=(X_val, y_val))
+    hist = model.fit(X_train, y_train, nb_epoch=50, batch_size=25, shuffle=True, validation_data=(X_val, y_val))
     ## STORING RESULTS
+    pickle.dump( hist.history, open( "mlp_768x1000x1000x10_tanh.hist", "wb" ) )
     save_keras_model(model, 'mlp_768x1000x1000x10_tanh')
