@@ -56,7 +56,8 @@ if __name__=='__main__':
 	activation_layer1 = 'sigmoid'; decoder_activation_2 = 'sigmoid'
 	loss_ = 'binary_crossentropy'
 	optimizer_ = SGD(lr=1.0)
-	epochs_ = 50, batch_size_ = 25
+	epochs_ = 50
+        batch_size_ = 25
 
 	### AUTOENCODER 1
 	input_img1 = Input(shape=(784,))
