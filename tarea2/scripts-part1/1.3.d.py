@@ -58,6 +58,16 @@ X_train, X_val, X_test, y_train, y_val, y_test = load_helper()
 
 
 if __name__=='__main__':
+    ## PARAMETERS
+    n_hidden_layer1 = 1000
+    activation_layer1 = 'sigmoid'; decoder_activation_1 = 'sigmoid'
+    n_hidden_layer2 = 1000
+    activation_layer2 = 'sigmoid'; decoder_activation_2 = 'sigmoid'
+    loss_ = 'binary_crossentropy'
+    optimizer_ = SGD(lr=1.0)
+    epochs_ = 50
+    batch_size_ = 25
+    
     # Data with gaussian noise
     X_train_noisy, X_val_noisy, X_test_noisy = gaussian_noise(X_train, X_val, X_test)
 
