@@ -63,9 +63,10 @@ def train_deep_ae(X_train, X_val, layer_sizes=[1000, 500, 250, 2], activation='r
     encoder = Model(input=layers_list[0], output=encoded)
     autoencoder = Model(input=layers_list[0], output=layers_list[-1])
     # training step
-    autoencoder.compile(optimizer=SGD(lr=1.0), loss='binary_crossentropy')
-    autoencoder.fit(X_train, X_train, nb_epoch=50, batch_size=25, shuffle=True, validation_data=(X_val, X_val))
+    autoencoder.compile(optimizer=SGD(lr=1.0), loss='binary_crossentropy', metrics=['accuracy'])
+    hist = autoencoder.fit(X_train, X_train, nb_epoch=50, batch_size=25, shuffle=True, validation_data=(X_val, X_val))
     # saving results
+    pickle.dump(hist.history, open( "enc_{0}L_{1}d.hist", "wb" ) )
     save_keras_model(encoder, 'enc_{0}L_{1}d'.format(len(layer_sizes), layer_sizes[-1]))
     save_keras_model(autoencoder, 'ae_{0}L_{1}d'.format(len(layer_sizes), layer_sizes[-1]))
     return autoencoder
