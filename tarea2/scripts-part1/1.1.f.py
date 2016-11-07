@@ -1,3 +1,6 @@
+import os
+os.environ["THEANO_FLAGS"] = "mode=FAST_RUN,device=gpu,floatX=float32"\
+
 import sys
 sys.path.insert(0, '/user/m/marvill/ANN/')
 from keras_helper import *
