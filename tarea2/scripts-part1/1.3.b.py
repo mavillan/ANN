@@ -53,7 +53,7 @@ if __name__=='__main__':
     n_hidden_layer1 = 1000
     activation_layer1 = 'sigmoid'; decoder_activation_1 = 'sigmoid'
     n_hidden_layer2 = 1000
-    activation_layer1 = 'sigmoid'; decoder_activation_2 = 'sigmoid'
+    activation_layer2 = 'sigmoid'; decoder_activation_2 = 'sigmoid'
     loss_ = 'binary_crossentropy'
     optimizer_ = SGD(lr=1.0)
     epochs_ = 50
