@@ -19,6 +19,13 @@ def unpickle(file):
     fo.close()
     return d
 
+def gaussian_noise(X_train, X_val, devst=0.1):
+    noise_mask = devst*np.random.standard_normal(size=X_train.shape)
+    X_train_noisy = X_train + noise_mask
+    noise_mask = devst*np.random.standard_normal(size=X_val.shape)
+    X_val_noisy = X_val + noise_mask
+    return X_train_noisy, X_val_noisy
+
 def load_NORB_train_val(PATH, batch=1):
     f = os.path.join(PATH, 'data_batch_{0}'.format(batch))
     datadict = unpickle(f)
@@ -51,8 +58,8 @@ def data_transform(X, normalize=True, a=None, b=None):
 
 def build_model(activation='relu'):
     model = Sequential()
-    model.add(Dense(40, input_dim=2048, activation=activation))
-    model.add(Dense(20, activation=activation))
+    model.add(Dense(4000, input_dim=2048, activation=activation))
+    model.add(Dense(2000, activation=activation))
     model.add(Dense(6, activation='softmax'))
     sgd = SGD(lr=0.1)
     model.compile(optimizer=sgd, loss='binary_crossentropy', metrics=['accuracy'])
@@ -69,17 +76,17 @@ if __name__=='__main__':
     activation = sys.argv[1]
     acc_list = []
 
-    xtr_s = []
-    ytr_s = []
-    xval_s = []
-    yval_s = []
-    xtr_ns = []
-    ytr_ns = []
-    xval_ns = []
-    yval_ns = []
-
     for n_batches in range(1,10):
         # loading data, and splitting it for supervised and no supervised training purposes
+        xtr_s = []
+        ytr_s = []
+        xval_s = []
+        yval_s = []
+        xtr_ns = []
+        ytr_ns = []
+        xval_ns = []
+        yval_ns = []
+
         for i in range(1, 11):
             if i<=n_batches:
                 X_train, y_train, X_val, y_val = load_NORB_train_val('/user/m/marvill/ANN/tarea2/data_part2/', i)
@@ -105,47 +112,48 @@ if __name__=='__main__':
         ## PARAMETERS
         loss_ = 'binary_crossentropy'
         optimizer_ = SGD(lr=0.1)
-        epochs_ = 1
+        epochs_ = 5
         batch_size_ = 100
 
-        print('AE1')
+        # Data with gaussian noise
+        X_train_ns_noisy, X_val_ns_noisy = gaussian_noise(X_train_ns, X_val_ns)
+
         ### AUTOENCODER 1
         input_img1 = Input(shape=(2048,))
-        encoded1 = Dense(40, activation=activation)(input_img1)
+        encoded1 = Dense(4000, activation=activation)(input_img1)
         decoded1 = Dense(2048, activation='sigmoid')(encoded1)
         autoencoder1 = Model(input=input_img1, output=decoded1)
         encoder1 = Model(input=input_img1, output=encoded1)
         autoencoder1.compile(optimizer=optimizer_, loss=loss_)
-        autoencoder1.fit(X_train_ns, X_train_ns, nb_epoch=epochs_, batch_size=batch_size_, 
-                         shuffle=True, validation_data=(X_val_ns, X_val_ns))
-        print('AE2')
+        autoencoder1.fit(X_train_ns_noisy, X_train_ns, nb_epoch=epochs_, batch_size=batch_size_, 
+                         shuffle=True, validation_data=(X_val_ns_noisy, X_val_ns))
+
         ### AUTOENCODER 2
         X_train_enc_ns = encoder1.predict(X_train_ns) 
         X_val_enc_ns = encoder1.predict(X_val_ns)
+        X_train_enc_ns_noisy, X_val_enc_ns_noisy = gaussian_noise(X_train_enc_ns, X_val_enc_ns)
 
-        input_img2 = Input(shape=(40,))
-        encoded2 = Dense(20, activation=activation)(input_img2)
-        decoded2 = Dense(40, activation='sigmoid')(encoded2)
+        input_img2 = Input(shape=(4000,))
+        encoded2 = Dense(2000, activation=activation)(input_img2)
+        decoded2 = Dense(4000, activation='sigmoid')(encoded2)
         autoencoder2 = Model(input=input_img2, output=decoded2)
         encoder2 = Model(input=input_img2, output=encoded2)
         autoencoder2.compile(optimizer=optimizer_, loss=loss_)
-        autoencoder2.fit(X_train_enc_ns, X_train_enc_ns, nb_epoch=epochs_, batch_size=batch_size_,
-                         shuffle=True, validation_data=(X_val_enc_ns, X_val_enc_ns))
+        autoencoder2.fit(X_train_enc_ns_noisy, X_train_enc_ns, nb_epoch=epochs_, batch_size=batch_size_,
+                         shuffle=True, validation_data=(X_val_enc_ns_noisy, X_val_enc_ns))
 
-        print('MLP')
         ### FINE TUNNING
         model = Sequential()
-        model.add( Dense(40, activation=activation, input_shape=(2048,)) )
+        model.add( Dense(4000, activation=activation, input_shape=(2048,)) )
         model.layers[-1].set_weights( autoencoder1.layers[1].get_weights() )
-        model.add( Dense(20, activation=activation) )
+        model.add( Dense(2000, activation=activation) )
         model.layers[-1].set_weights( autoencoder2.layers[1].get_weights() )
         model.add(Dense(6, activation='softmax'))
         model.compile(optimizer=optimizer_, loss='binary_crossentropy', metrics=['accuracy'])
         # saving net before fine tunning
-        model.fit(X_train_s, Y_train_s, nb_epoch=epochs_, batch_size=batch_size_, shuffle=True, validation_data=(X_val_s, Y_val_s))
+        model.fit(X_train_s, Y_train_s, nb_epoch=epochs_, batch_size=batch_size_, 
+                  shuffle=True, validation_data=(X_val_s, Y_val_s))
         # saving results
-        acc = model.evaluate(X_test, Y_test, verbose=0)
+        acc = model.evaluate(X_test, Y_test_s, verbose=0)
         acc_list.append(acc)
-        pickle.dump(acc_list, open('mlp_acc_AE_{0}'.format(activation),'wb'))
-
-        del model, autoencoder1, autoencoder2
+    pickle.dump(acc_list, open('mlp_acc_DAE_{0}'.format(activation),'wb'))
