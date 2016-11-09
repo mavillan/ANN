@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy as np
 import cPickle
 import pickle
@@ -50,8 +51,8 @@ def data_transform(X, normalize=True, a=None, b=None):
 
 def build_model(activation='relu'):
     model = Sequential()
-    model.add(Dense(40, input_dim=2048, activation=activation))
-    model.add(Dense(20, activation=activation))
+    model.add(Dense(4000, input_dim=2048, activation=activation))
+    model.add(Dense(2000, activation=activation))
     model.add(Dense(6, activation='softmax'))
     sgd = SGD(lr=0.1)
     model.compile(optimizer=sgd, loss='binary_crossentropy', metrics=['accuracy'])
@@ -59,7 +60,8 @@ def build_model(activation='relu'):
 
 
 ### LOADING TEST DATA
-X_test, y_test = load_NORB_test('data_part2/')
+X_test, y_test = load_NORB_test('/user/m/marvill/ANN/tarea2/data_part2/')
+X_test_scaled = data_transform(X_test)
 Y_test = np_utils.to_categorical(y_test, 6)
 
 
@@ -70,7 +72,7 @@ if __name__=='__main__':
     acc_list = []
 
     for i, theta in enumerate(np.linspace(0.1, 1., 10)):
-        X_train, y_train, X_val, y_val = load_NORB_train_val('data_part2/', i+1)
+        X_train, y_train, X_val, y_val = load_NORB_train_val('/user/m/marvill/ANN/tarea2/data_part2/', i+1)
         # scalling data
         X_train_scaled = data_transform(X_train)
         X_val_scaled = data_transform(X_val)
@@ -81,4 +83,4 @@ if __name__=='__main__':
         model.fit(X_train_scaled, Y_train, batch_size=100, validation_data=(X_val_scaled, Y_val), nb_epoch=10)
         acc = model.evaluate(X_test_scaled, Y_test, verbose=0)
         acc_list.append(acc)
-    pickle.dump(acc_list, 'mlp_relu_acc')
+    pickle.dump(acc_list, open('mlp_relu_acc','wb'))
