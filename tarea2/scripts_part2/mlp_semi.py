@@ -51,8 +51,8 @@ def data_transform(X, normalize=True, a=None, b=None):
 
 def build_model(activation='relu'):
     model = Sequential()
-    model.add(Dense(4000, input_dim=2048, activation=activation))
-    model.add(Dense(2000, activation=activation))
+    model.add(Dense(1000, input_dim=2048, activation=activation))
+    model.add(Dense(500, activation=activation))
     model.add(Dense(6, activation='softmax'))
     sgd = SGD(lr=0.1)
     model.compile(optimizer=sgd, loss='binary_crossentropy', metrics=['accuracy'])
