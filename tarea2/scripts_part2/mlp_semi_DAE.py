@@ -58,8 +58,8 @@ def data_transform(X, normalize=True, a=None, b=None):
 
 def build_model(activation='relu'):
     model = Sequential()
-    model.add(Dense(4000, input_dim=2048, activation=activation))
-    model.add(Dense(2000, activation=activation))
+    model.add(Dense(1000, input_dim=2048, activation=activation))
+    model.add(Dense(500, activation=activation))
     model.add(Dense(6, activation='softmax'))
     sgd = SGD(lr=0.1)
     model.compile(optimizer=sgd, loss='binary_crossentropy', metrics=['accuracy'])
@@ -111,8 +111,8 @@ if __name__=='__main__':
 
         ## PARAMETERS
         loss_ = 'binary_crossentropy'
-        optimizer_ = SGD(lr=0.1)
-        epochs_ = 5
+        optimizer_ = SGD(lr=0.01)
+        epochs_ = 10
         batch_size_ = 100
 
         # Data with gaussian noise
@@ -120,12 +120,12 @@ if __name__=='__main__':
 
         ### AUTOENCODER 1
         input_img1 = Input(shape=(2048,))
-        encoded1 = Dense(4000, activation=activation)(input_img1)
+        encoded1 = Dense(1000, activation=activation)(input_img1)
         decoded1 = Dense(2048, activation='sigmoid')(encoded1)
         autoencoder1 = Model(input=input_img1, output=decoded1)
         encoder1 = Model(input=input_img1, output=encoded1)
         autoencoder1.compile(optimizer=optimizer_, loss=loss_)
-        autoencoder1.fit(X_train_ns_noisy, X_train_ns, nb_epoch=epochs_, batch_size=batch_size_, 
+        autoencoder1.fit(X_train_ns_noisy, X_train_ns, nb_epoch=5, batch_size=batch_size_, 
                          shuffle=True, validation_data=(X_val_ns_noisy, X_val_ns))
 
         ### AUTOENCODER 2
@@ -133,20 +133,20 @@ if __name__=='__main__':
         X_val_enc_ns = encoder1.predict(X_val_ns)
         X_train_enc_ns_noisy, X_val_enc_ns_noisy = gaussian_noise(X_train_enc_ns, X_val_enc_ns)
 
-        input_img2 = Input(shape=(4000,))
-        encoded2 = Dense(2000, activation=activation)(input_img2)
-        decoded2 = Dense(4000, activation='sigmoid')(encoded2)
+        input_img2 = Input(shape=(1000,))
+        encoded2 = Dense(500, activation=activation)(input_img2)
+        decoded2 = Dense(1000, activation='sigmoid')(encoded2)
         autoencoder2 = Model(input=input_img2, output=decoded2)
         encoder2 = Model(input=input_img2, output=encoded2)
         autoencoder2.compile(optimizer=optimizer_, loss=loss_)
-        autoencoder2.fit(X_train_enc_ns_noisy, X_train_enc_ns, nb_epoch=epochs_, batch_size=batch_size_,
+        autoencoder2.fit(X_train_enc_ns_noisy, X_train_enc_ns, nb_epoch=5, batch_size=batch_size_,
                          shuffle=True, validation_data=(X_val_enc_ns_noisy, X_val_enc_ns))
 
         ### FINE TUNNING
         model = Sequential()
-        model.add( Dense(4000, activation=activation, input_shape=(2048,)) )
+        model.add( Dense(1000, activation=activation, input_shape=(2048,)) )
         model.layers[-1].set_weights( autoencoder1.layers[1].get_weights() )
-        model.add( Dense(2000, activation=activation) )
+        model.add( Dense(500, activation=activation) )
         model.layers[-1].set_weights( autoencoder2.layers[1].get_weights() )
         model.add(Dense(6, activation='softmax'))
         model.compile(optimizer=optimizer_, loss='binary_crossentropy', metrics=['accuracy'])
@@ -154,6 +154,7 @@ if __name__=='__main__':
         model.fit(X_train_s, Y_train_s, nb_epoch=epochs_, batch_size=batch_size_, 
                   shuffle=True, validation_data=(X_val_s, Y_val_s))
         # saving results
-        acc = model.evaluate(X_test, Y_test_s, verbose=0)
+        acc = model.evaluate(X_test, Y_test, verbose=0)
         acc_list.append(acc)
+    print(acc_list)
     pickle.dump(acc_list, open('mlp_acc_DAE_{0}'.format(activation),'wb'))
