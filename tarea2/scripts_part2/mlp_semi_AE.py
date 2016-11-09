@@ -69,17 +69,18 @@ if __name__=='__main__':
     activation = sys.argv[1]
     acc_list = []
 
-    xtr_s = []
-    ytr_s = []
-    xval_s = []
-    yval_s = []
-    xtr_ns = []
-    ytr_ns = []
-    xval_ns = []
-    yval_ns = []
 
     for n_batches in range(1,10):
         # loading data, and splitting it for supervised and no supervised training purposes
+        xtr_s = []
+        ytr_s = []
+        xval_s = []
+        yval_s = []
+        xtr_ns = []
+        ytr_ns = []
+        xval_ns = []
+        yval_ns = []
+
         for i in range(1, 11):
             if i<=n_batches:
                 X_train, y_train, X_val, y_val = load_NORB_train_val('/user/m/marvill/ANN/tarea2/data_part2/', i)
@@ -146,6 +147,5 @@ if __name__=='__main__':
         # saving results
         acc = model.evaluate(X_test, Y_test, verbose=0)
         acc_list.append(acc)
-        pickle.dump(acc_list, open('mlp_acc_AE_{0}'.format(activation),'wb'))
-
         del model, autoencoder1, autoencoder2
+    pickle.dump(acc_list, open('mlp_acc_AE_{0}'.format(activation),'wb'))
