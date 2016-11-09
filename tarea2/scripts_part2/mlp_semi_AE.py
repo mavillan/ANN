@@ -82,18 +82,18 @@ if __name__=='__main__':
     # loading data, and splitting it for supervised and no supervised training purposes
     for i in range(1, 11):
         if i<=n_batches:
-            X_train, y_train, X_val, y_val = load_NORB_train_val('/user/m/marvill/ANN/tarea2/data_part2/', i+1)
+            X_train, y_train, X_val, y_val = load_NORB_train_val('/user/m/marvill/ANN/tarea2/data_part2/', i)
             xtr_s.append(data_transform(X_train)); ytr_s.append(y_train)
             xval_s.append(data_transform(X_val)); yval_s.append(y_val)
         else:
-            X_train, y_train, X_val, y_val = load_NORB_train_val('/user/m/marvill/ANN/tarea2/data_part2/', i+1)
+            X_train, y_train, X_val, y_val = load_NORB_train_val('/user/m/marvill/ANN/tarea2/data_part2/', i)
             xtr_ns.append(data_transform(X_train)); ytr_ns.append(y_train)
             xval_ns.append(data_transform(X_val)); yval_ns.append(y_val)
 
     X_train_s = np.concatenate(xtr_s); y_train_s = np.concatenate(ytr_s)
     X_val_s = np.concatenate(xval_s); y_val_s = np.concatenate(yval_s)
-    X_train_ns = np.concatenate(xtr_s); y_train_ns = np.concatenate(ytr_s)
-    X_val_ns = np.concatenate(xval_s); y_val_ns = np.concatenate(yval_s)
+    X_train_ns = np.concatenate(xtr_ns); y_train_ns = np.concatenate(ytr_ns)
+    X_val_ns = np.concatenate(xval_ns); y_val_ns = np.concatenate(yval_ns)
     del xtr_s, ytr_s, xval_s, yval_s, xtr_ns, ytr_ns, xval_ns, yval_ns
 
     # categorizing targets
@@ -135,7 +135,7 @@ if __name__=='__main__':
     model = Sequential()
     model.add( Dense(4000, activation=activation, input_shape=(2048,)) )
     model.layers[-1].set_weights( autoencoder1.layers[1].get_weights() )
-    model.add( Dense(2000, activation=activation_layer2) )
+    model.add( Dense(2000, activation=activation) )
     model.layers[-1].set_weights( autoencoder2.layers[1].get_weights() )
     model.add(Dense(6, activation='softmax'))
     model.compile(optimizer=optimizer_, loss='binary_crossentropy', metrics=['accuracy'])
