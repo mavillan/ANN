@@ -19,7 +19,7 @@ from keras_helper import load_keras_model as load
 from keras_helper import save_keras_model as save
 
 # directory where models will be saved
-base_dir = 'models/'
+base_dir = '/user/m/marvill/ANN/tarea3/models/'
 
 
 def generate_model(top_words, embedding_length, n_lstm_units=100):
