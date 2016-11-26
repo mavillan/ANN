@@ -32,18 +32,18 @@ def generate_model(top_words, embedding_length, n_lstm_units=100):
 
 
 if __name__=='__main__':
-    top_words_list = range(1000, 20001, 1000)
+    top_words = int(sys.argv[1])
 
-    for top_words in top_words_list:
-        # loading data
-        (X_train, y_train), (X_test, y_test) = imdb.load_data(nb_words=top_words, seed=15)
-        X_train = sequence.pad_sequences(X_train, maxlen=500)
-        X_test = sequence.pad_sequences(X_test, maxlen=500)
-        # generating the model
-        model = generate_model(top_words=top_words, embedding_length=32, n_lstm_units=100)
+    # loading data
+    (X_train, y_train), (X_test, y_test) = imdb.load_data(nb_words=top_words, seed=15)
+    X_train = sequence.pad_sequences(X_train, maxlen=500)
+    X_test = sequence.pad_sequences(X_test, maxlen=500)
+
+    embedding_lengths = [8,16,32,64,128,256,512,1024]
+
+    for length in embedding_lengths:
+        model = generate_model(top_words=top_words , embedding_length=length, n_lstm_units=100)
         # fitting the model
         hist = model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=3, batch_size=64)
         # saving the model
-        save(model, 'lstm100_embbeding32_tw{0}'.format(top_words), base_dir=base_dir)
-        # releasing memory
-        del X_train, X_test, y_train, y_test, model
+        save(model, 'lstm100_embbeding{0}_tw{1}'.format(length, top_words), base_dir=base_dir)
