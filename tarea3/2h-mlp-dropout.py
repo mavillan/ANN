@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from keras.datasets import imdb
 from keras.preprocessing import sequence
 from keras.models import Sequential
-from keras.layers import Dense, LSTM, Dropout
+from keras.layers import Dense, LSTM, Dropout, Flatten
 from keras.layers.embeddings import Embedding
 
 import sys
@@ -27,6 +27,10 @@ if __name__=='__main__':
     embedding_length = 32
     top_words = 5000
 
+    (X_train, y_train), (X_test, y_test) = imdb.load_data(nb_words=top_words, seed=15)
+    X_train = sequence.pad_sequences(X_train, maxlen=500)
+    X_test = sequence.pad_sequences(X_test, maxlen=500)
+
     # building the model
     model = Sequential()
     model.add(Embedding(top_words, embedding_length, input_length=500))
@@ -40,7 +44,7 @@ if __name__=='__main__':
     # compiling the model
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
     # fitting the model
-    hist = model.fit(X_tr, y_tr, nb_epoch=50, verbose=0, validation_data=(X_val, y_val))
+    hist = model.fit(X_train, y_train, nb_epoch=50, verbose=0, validation_data=(X_test, y_test))
     # saving the model
     save(model, 'MLP_dropout_embedding{0}_tw{1}'.format(embedding_length, top_words), base_dir=base_dir)
 
