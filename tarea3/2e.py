@@ -49,5 +49,5 @@ if __name__=='__main__':
         #acc_tr.append(model.evaluate(X_train, y_train)[1])
         #acc_ts.append(model.evaluate(X_test, y_test)[1])
         # saving the model
-        save(model, 'lstm100_embbeding{0}'.format(length), base_dir=base_dir)
+        save(model, 'lstm100_embedding{0}'.format(length), base_dir=base_dir)
 

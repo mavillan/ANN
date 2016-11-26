@@ -46,4 +46,4 @@ if __name__=='__main__':
         # fitting the model
         hist = model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=3, batch_size=64)
         # saving the model
-        save(model, 'lstm100_embbeding{0}_tw{1}'.format(length, top_words), base_dir=base_dir)
+        save(model, 'lstm100_embedding{0}_tw{1}'.format(length, top_words), base_dir=base_dir)
