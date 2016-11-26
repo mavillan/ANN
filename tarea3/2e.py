@@ -6,7 +6,6 @@ from theano.tensor.shared_randomstreams import RandomStreams
 srng = RandomStreams(8)
 
 import matplotlib.pyplot as plt
-%matplotlib inline
 
 from keras.datasets import imdb
 from keras.preprocessing import sequence
@@ -15,7 +14,7 @@ from keras.layers import Dense, LSTM, Dropout
 from keras.layers.embeddings import Embedding
 
 import sys
-sys.path.append('../')
+sys.path.append('/user/m/marvill/ANN/')
 from keras_helper import load_keras_model as load
 from keras_helper import save_keras_model as save
 
@@ -43,7 +42,7 @@ if __name__=='__main__':
     acc_ts = []
 
     for length in embedding_lengths:
-        model = generate_model(embedding_vector_length=32, top_words=3000, n_lstm_units=100)
+        model = generate_model(embedding_vector_length=length, top_words=3000, n_lstm_units=100)
         # fitting the model
         hist = model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=3, batch_size=64)
         # evaluating the model
