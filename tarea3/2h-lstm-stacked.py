@@ -45,18 +45,18 @@ if __name__=='__main__':
     X_train = sequence.pad_sequences(X_train, maxlen=500)
     X_test = sequence.pad_sequences(X_test, maxlen=500)
 
-	# building the model
-	model = Sequential()
-	model.add(Embedding(top_words, embedding_length, input_length=500))
-	model.add(LSTM(n_lstm_units, return_sequences=True))
-	model.add(LSTM(n_lstm_units/2))
-	model.add(Dense(1, activation='sigmoid'))
-	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+    # building the model
+    model = Sequential()
+    model.add(Embedding(top_words, embedding_length, input_length=500))
+    model.add(LSTM(n_lstm_units, return_sequences=True))
+    model.add(LSTM(n_lstm_units/2))
+    model.add(Dense(1, activation='sigmoid'))
+    model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-	# fitting the model
-	hist = model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=3, batch_size=64)
-	# saving the model
-	save(model, 'lstm-stacked_embedding{0}_tw{1}'.format(embedding_length, top_words), base_dir=base_dir)
+    # fitting the model
+    hist = model.fit(X_train, y_train, validation_data=(X_test, y_test), nb_epoch=3, batch_size=64)
+    # saving the model
+    save(model, 'lstm-stacked_embedding{0}_tw{1}'.format(embedding_length, top_words), base_dir=base_dir)
 
 
 
