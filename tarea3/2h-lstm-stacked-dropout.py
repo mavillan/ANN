@@ -52,7 +52,7 @@ if __name__=='__main__':
     model.add(Dropout(dropout))
     model.add(LSTM(n_lstm_units, return_sequences=True))
     model.add(Dropout(dropout))
-    model.add(LSTM(n_lstm_units/2))
+    model.add(LSTM(int(n_lstm_units/2)))
     model.add(Dropout(dropout))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])

@@ -49,7 +49,7 @@ if __name__=='__main__':
     model = Sequential()
     model.add(Embedding(top_words, embedding_length, input_length=500))
     model.add(LSTM(n_lstm_units, return_sequences=True))
-    model.add(LSTM(n_lstm_units/2))
+    model.add(LSTM(int(n_lstm_units/2)))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 

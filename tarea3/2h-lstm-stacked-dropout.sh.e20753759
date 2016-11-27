@@ -1,0 +1,33 @@
+Using Theano backend.
+/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/backend/theano_backend.py:140: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  return variable(np.random.uniform(low=low, high=high, size=shape),
+/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/initializations.py:80: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  a = np.random.normal(0.0, 1.0, flat_shape)
+/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/initializations.py:84: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  q = q.reshape(shape)
+/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/initializations.py:85: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  return K.variable(scale * q[:shape[0], :shape[1]], name=name)
+/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/backend/theano_backend.py:116: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  return variable(np.zeros(shape), dtype, name)
+/user/m/marvill/anaconda3/lib/python3.5/site-packages/numpy/core/numeric.py:190: VisibleDeprecationWarning: using a non-integer number instead of an integer will result in an error in the future
+  a = empty(shape, dtype, order)
+Traceback (most recent call last):
+  File "/user/m/marvill/ANN/tarea3/2h-lstm-stacked-dropout.py", line 55, in <module>
+    model.add(LSTM(n_lstm_units/2))
+  File "/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/models.py", line 312, in add
+    output_tensor = layer(self.outputs[0])
+  File "/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/engine/topology.py", line 514, in __call__
+    self.add_inbound_node(inbound_layers, node_indices, tensor_indices)
+  File "/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/engine/topology.py", line 572, in add_inbound_node
+    Node.create_node(self, inbound_layers, node_indices, tensor_indices)
+  File "/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/engine/topology.py", line 149, in create_node
+    output_tensors = to_list(outbound_layer.call(input_tensors[0], mask=input_masks[0]))
+  File "/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/layers/recurrent.py", line 205, in call
+    initial_states = self.get_initial_states(x)
+  File "/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/layers/recurrent.py", line 190, in get_initial_states
+    initial_state = K.tile(initial_state, [1, self.output_dim])  # (samples, output_dim)
+  File "/user/m/marvill/anaconda3/lib/python3.5/site-packages/keras/backend/theano_backend.py", line 553, in tile
+    return T.tile(x, n)
+  File "/user/m/marvill/anaconda3/lib/python3.5/site-packages/theano/tensor/basic.py", line 4921, in tile
+    raise ValueError("elements of reps must be scalars of integer dtype")
+ValueError: elements of reps must be scalars of integer dtype
